@@ -106,7 +106,13 @@ public class MockServiceTest {
     // 4-2. champion 객체에서 이름을 가져오는 로직이 최소 3번 이하 실행되면 Pass 하는 로직을 작성하세요.
     @Test
     public void shouldNotInvocationForSetName(){
+        Champion champion = mock(Champion.class);
+        champion.setName("아지르");
+        champion.setPosition("미드");
+        champion.setHasSkinCount(3);
 
+        verify(champion,never()).setName("직스");
+        //setName() method가 호출되지 않아야 test가 이상 없이 통과한다.
     }
     // 4-3. champion 객체에서 이름을 저장하는 로직이 실행되지 않았으면 Pass 하는 로직을 작성하세요.
 

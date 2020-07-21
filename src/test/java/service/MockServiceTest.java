@@ -144,15 +144,40 @@ public class MockServiceTest {
     public void shouldPositionisTopForFindBynameLissandra(){
         when(mockService.findByName("리산드라")).thenReturn(new Champion("페이크 리산드라", "미드",5));
         assertThat(mockService.findByName("리산드라").getPosition(), is("미드"));
+        assertThat(mockService.findByName("리산드라").getHasSkinCount(), is(5));
     }
     // 2. 2개 이상의 챔피언을 List로 만들어 전체 챔피언을 가져오는 메소드 호출시 그 갯수가 맞는지 확인하는 테스트 코드를 작성하세요.
-    
+    @Test
+    public void testConfirmCountWhenGetChampionList(){
+        List<Champion> champions = new ArrayList<Champion>();
+        champions.add(new Champion("루시안","바텀",5));
+        champions.add(new Champion("유미","서폿",3));
+        champions.add(new Champion("애쉬","바텀",6));
 
+        when(mockService.findAllChampions()).thenReturn(champions);
+        assertThat(mockService.findAllChampions().size(), is(3));
+        verify(mockRepository, times(1)).findAll();
+    }
     // 3. 챔피언을 검색하면 가짜 챔피언 객체를 리턴하고, mockRepository의 해당 메소드가 1번 호출되었는지를 검증하고, 그 객체의 스킨 개수가
     //    맞는지 확인하는 테스트코드를 작성하세요.
-
+    @Test
+    public void testSkinCountAndInvocationOneTimeWhenFindChampion(){
+        when(mockService.findByName(anyString())).thenReturn(new Champion("오공","정글",3));
+        assertThat(mockService.findByName("르블랑").getHasSkinCount(), is(3));
+        verify(mockRepository, times(1)).findByName(anyString());
+    }
     // 4. 2개 이상의 가짜 챔피언 객체를 List로 만들어 리턴하고, 하나씩 해당 객체를 검색한 뒤 검색을 위해 호출한 횟수를 검증하세요.
-
+    @Test
+    public void testInvocationCountWhenGetChampionList(){
+        List<Champion> champions = new ArrayList<Champion>();
+        champions.add(new Champion("루시안","바텀",5));
+        champions.add(new Champion("유미","서폿",3));
+        champions.add(new Champion("애쉬","바텀",6));
+        when(mockService.findAllChampions()).thenReturn(champions);
+        assertThat(mockService.findAllChampions().get(0).getName(), is("루시안"));
+        assertThat(mockService.findAllChampions().size(), is(3));
+        verify(mockRepository, times(2)).findAll();
+    }
 
     //가장 많이 사용되는 테스트 중 하나로 BDD 방식에 기반한 테스트 방법 예제
     @Test
